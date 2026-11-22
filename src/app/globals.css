@@ -1,39 +1,68 @@
 @import "tailwindcss";
 
 /*
-  Identidade visual: tokens em variáveis para alinhar com o painel atual da
-  Marmaris. Troque os valores de --primary, --sidebar etc. pelas cores da marca.
+  Sistema visual do Painel da Mentoria Marmaris.
+  Base: identidade da Marmaris Viagens (preto profundo, vermelho da marca,
+  pêssego como acento, tipografia geométrica) com acabamento fluido:
+  vidro, brilho suave, movimento curto com curva "apple" e cantos amplos.
 */
 :root {
-  --bg: #f6f7f9;
-  --fg: #111827;
-  --fg-muted: #6b7280;
-  --card: #ffffff;
-  --muted: #eef0f3;
-  --border: #e3e6eb;
+  color-scheme: dark;
 
-  --primary: #0e7490; /* azul-petróleo (placeholder da marca) */
+  /* Superfícies */
+  --bg: #08080a;
+  --bg-elev: #0f0f12;
+  --card: rgba(255, 255, 255, 0.045);
+  --card-hover: rgba(255, 255, 255, 0.07);
+  --muted: rgba(255, 255, 255, 0.06);
+  --border: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.16);
+
+  /* Texto */
+  --fg: #f5f5f7;
+  --fg-muted: #9a9aa6;
+  --fg-faint: #6b6b76;
+
+  /* Marca */
+  --primary: #e0262e;
+  --primary-deep: #9b080e;
   --primary-fg: #ffffff;
+  --accent: #ffd3ad;
+  --brand-gradient: linear-gradient(135deg, #ff3b45 0%, #d81f26 45%, #9b080e 100%);
 
-  --sidebar: #0b1f2a;
-  --sidebar-fg: #e6edf2;
-  --sidebar-hover: rgba(255, 255, 255, 0.06);
-  --sidebar-ativo: rgba(255, 255, 255, 0.12);
+  /* Sidebar */
+  --sidebar: rgba(10, 10, 12, 0.85);
+  --sidebar-fg: #e9e9ee;
+  --sidebar-hover: rgba(255, 255, 255, 0.05);
+  --sidebar-ativo: rgba(255, 255, 255, 0.09);
   --sidebar-ativo-fg: #ffffff;
 
-  --ok: #16a34a;
-  --alerta: #f59e0b;
-  --alerta-fg: #92400e;
-  --erro: #dc2626;
+  /* Estados */
+  --ok: #30d158;
+  --alerta: #ff9f0a;
+  --alerta-fg: #ffd089;
+  --erro: #ff453a;
+
+  /* Movimento */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-io: cubic-bezier(0.4, 0, 0.2, 1);
+  --t-fast: 160ms;
+  --t: 260ms;
+  --t-slow: 520ms;
+
+  --radius: 18px;
+  --radius-sm: 12px;
+  --radius-pill: 999px;
 }
 
 @theme inline {
   --color-background: var(--bg);
   --color-foreground: var(--fg);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-outfit);
   --font-mono: var(--font-geist-mono);
 }
 
+/* ---------------------------------------------------------------- base */
 html,
 body {
   height: 100%;
@@ -42,16 +71,198 @@ body {
 body {
   background: var(--bg);
   color: var(--fg);
-  font-family: var(--font-sans), system-ui, sans-serif;
+  font-family: var(--font-sans), -apple-system, "SF Pro Text", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "ss01", "cv11";
 }
 
-input,
+/* Brilho de fundo: vermelho da marca no canto superior esquerdo e pêssego no
+   inferior direito, fixos, muito sutis. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(900px 600px at -10% -10%, rgba(224, 38, 46, 0.16), transparent 60%),
+    radial-gradient(800px 500px at 110% 110%, rgba(255, 211, 173, 0.07), transparent 60%),
+    radial-gradient(600px 400px at 60% 0%, rgba(255, 255, 255, 0.03), transparent 60%);
+}
+
+::selection {
+  background: rgba(224, 38, 46, 0.35);
+}
+
+/* Scrollbar fina */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.14) transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+}
+
+/* ------------------------------------------------------------- campos */
+input:not([type="checkbox"]):not([type="radio"]),
 select,
 textarea {
-  @apply w-full rounded-lg border border-[var(--border)] bg-[var(--card)] px-3 py-2 text-sm text-[var(--fg)] outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20;
+  width: 100%;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.6rem 0.85rem;
+  font-size: 0.9rem;
+  color: var(--fg);
+  outline: none;
+  transition:
+    border-color var(--t-fast) var(--ease-io),
+    background var(--t-fast) var(--ease-io),
+    box-shadow var(--t-fast) var(--ease-io);
+}
+input:not([type="checkbox"]):not([type="radio"]):hover,
+select:hover,
+textarea:hover {
+  border-color: var(--border-strong);
+}
+input:not([type="checkbox"]):not([type="radio"]):focus,
+select:focus,
+textarea:focus {
+  border-color: rgba(224, 38, 46, 0.7);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 0 4px rgba(224, 38, 46, 0.18);
+}
+input::placeholder,
+textarea::placeholder {
+  color: var(--fg-faint);
+}
+select option {
+  background: var(--bg-elev);
+  color: var(--fg);
+}
+input[type="checkbox"] {
+  accent-color: var(--primary);
+  width: 1rem;
+  height: 1rem;
+}
+input::-webkit-calendar-picker-indicator {
+  filter: invert(1) opacity(0.6);
 }
 
 label {
-  @apply mb-1 block text-xs font-medium text-[var(--fg-muted)];
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+
+/* ----------------------------------------------------------- utilidades */
+@utility glass {
+  background: var(--card);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.04) inset,
+    0 10px 30px -18px rgba(0, 0, 0, 0.8);
+}
+
+@utility glass-hover {
+  transition:
+    transform var(--t) var(--ease),
+    background var(--t) var(--ease-io),
+    border-color var(--t) var(--ease-io),
+    box-shadow var(--t) var(--ease);
+  &:hover {
+    background: var(--card-hover);
+    border-color: var(--border-strong);
+    transform: translateY(-2px);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.06) inset,
+      0 24px 50px -24px rgba(0, 0, 0, 0.9),
+      0 0 0 1px rgba(224, 38, 46, 0.08);
+  }
+}
+
+@utility brand-gradient {
+  background: var(--brand-gradient);
+}
+
+@utility text-gradient {
+  background: linear-gradient(120deg, #ffffff 0%, #ffd3ad 60%, #ff8a8f 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Entrada suave de conteúdo: cada página e cada bloco sobem e aparecem. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.995);
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@utility rise {
+  animation: rise var(--t-slow) var(--ease) both;
+}
+
+.rise-1 { animation-delay: 40ms; }
+.rise-2 { animation-delay: 90ms; }
+.rise-3 { animation-delay: 140ms; }
+.rise-4 { animation-delay: 190ms; }
+.rise-5 { animation-delay: 240ms; }
+.rise-6 { animation-delay: 290ms; }
+
+@keyframes shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { box-shadow: 0 0 0 0 currentColor; opacity: 1; }
+  50% { box-shadow: 0 0 0 4px transparent; opacity: 0.85; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Vista de transição entre páginas (navegadores que suportam) */
+@view-transition {
+  navigation: auto;
+}
+::view-transition-old(root) {
+  animation: 180ms var(--ease-io) both fade-out;
+}
+::view-transition-new(root) {
+  animation: 320ms var(--ease) both rise;
+}
+@keyframes fade-out {
+  to { opacity: 0; }
 }

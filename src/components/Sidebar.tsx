@@ -18,6 +18,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import type { BlocoMenu } from "@/lib/navegacao";
+import { Logo } from "@/components/Logo";
 
 const ICONES: Record<string, LucideIcon> = {
   LayoutDashboard,
@@ -33,6 +34,17 @@ const ICONES: Record<string, LucideIcon> = {
   Settings,
 };
 
+const ROTULO_PERFIL: Record<string, string> = { admin: "Admin", equipe: "Equipe", mentorado: "Mentorado" };
+
+function iniciais(nome: string) {
+  return nome
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((p) => p[0]?.toUpperCase())
+    .join("");
+}
+
 export function Sidebar({
   blocos,
   usuario,
@@ -43,41 +55,50 @@ export function Sidebar({
   const pathname = usePathname();
 
   return (
-    <aside className="flex h-screen w-64 shrink-0 flex-col border-r border-[var(--border)] bg-[var(--sidebar)] text-[var(--sidebar-fg)]">
-      <div className="flex items-center gap-3 px-5 py-5">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--primary)] font-bold text-[var(--primary-fg)]">
-          M
-        </div>
-        <div className="leading-tight">
-          <p className="text-sm font-semibold">Marmaris</p>
-          <p className="text-xs opacity-70">Mentoria</p>
-        </div>
+    <aside className="sticky top-0 flex h-screen w-[264px] shrink-0 flex-col border-r border-[var(--border)] bg-[var(--sidebar)] text-[var(--sidebar-fg)] backdrop-blur-2xl">
+      {/* Marca */}
+      <div className="px-6 pb-4 pt-7">
+        <Logo className="h-9 w-auto" />
+        <p className="mt-2 text-[11px] font-medium uppercase tracking-[0.22em] text-[var(--fg-muted)]">
+          Mentoria
+        </p>
       </div>
 
-      <nav className="flex-1 overflow-y-auto px-3 pb-4">
+      {/* Navegação */}
+      <nav className="flex-1 overflow-y-auto px-3 pb-4 pt-2">
         {blocos.map((bloco, i) => (
-          <div key={bloco.titulo || i} className="mb-4">
+          <div key={bloco.titulo || i} className="mb-5">
             {bloco.titulo && (
-              <p className="mb-1 px-2 text-[11px] font-semibold uppercase tracking-wider opacity-50">
+              <p className="mb-1.5 px-3 text-[10.5px] font-semibold uppercase tracking-[0.18em] text-[var(--fg-faint)]">
                 {bloco.titulo}
               </p>
             )}
             <ul className="space-y-0.5">
               {bloco.itens.map((item) => {
                 const Icone = ICONES[item.icone] ?? LayoutDashboard;
-                const ativo =
-                  item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+                const ativo = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
                 return (
                   <li key={item.href}>
                     <Link
                       href={item.href}
-                      className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition ${
+                      aria-current={ativo ? "page" : undefined}
+                      className={`group relative flex items-center gap-3 rounded-[12px] px-3 py-2.5 text-[14px] transition-all duration-200 ease-[var(--ease-io)] ${
                         ativo
-                          ? "bg-[var(--sidebar-ativo)] font-medium text-[var(--sidebar-ativo-fg)]"
-                          : "opacity-80 hover:bg-[var(--sidebar-hover)] hover:opacity-100"
+                          ? "bg-[var(--sidebar-ativo)] font-medium text-[var(--sidebar-ativo-fg)] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
+                          : "text-[var(--fg-muted)] hover:bg-[var(--sidebar-hover)] hover:text-[var(--fg)]"
                       }`}
                     >
-                      <Icone className="h-4 w-4" />
+                      <span
+                        className={`absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-[var(--primary)] transition-all duration-300 ease-[var(--ease)] ${
+                          ativo ? "opacity-100" : "opacity-0 group-hover:opacity-40"
+                        }`}
+                      />
+                      <Icone
+                        className={`h-[17px] w-[17px] transition-transform duration-300 ease-[var(--ease)] ${
+                          ativo ? "text-[var(--primary)]" : "group-hover:-translate-y-px"
+                        }`}
+                        strokeWidth={ativo ? 2.2 : 1.8}
+                      />
                       {item.label}
                     </Link>
                   </li>
@@ -88,17 +109,26 @@ export function Sidebar({
         ))}
       </nav>
 
-      <div className="border-t border-[var(--border)]/40 px-4 py-4">
-        <p className="truncate text-sm font-medium">{usuario.nome}</p>
-        <p className="text-xs capitalize opacity-60">{usuario.perfil}</p>
-        <form action="/auth/signout" method="post" className="mt-3">
-          <button
-            type="submit"
-            className="flex items-center gap-2 text-xs opacity-70 transition hover:opacity-100"
-          >
-            <LogOut className="h-3.5 w-3.5" /> Sair
-          </button>
-        </form>
+      {/* Usuário */}
+      <div className="m-3 rounded-[14px] border border-[var(--border)] bg-[var(--card)] p-3">
+        <div className="flex items-center gap-3">
+          <div className="brand-gradient flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[12px] font-semibold text-white shadow-[0_6px_18px_-6px_rgba(224,38,46,0.7)]">
+            {iniciais(usuario.nome) || "M"}
+          </div>
+          <div className="min-w-0 flex-1 leading-tight">
+            <p className="truncate text-[13px] font-medium text-[var(--fg)]">{usuario.nome}</p>
+            <p className="text-[11px] text-[var(--fg-muted)]">{ROTULO_PERFIL[usuario.perfil] ?? usuario.perfil}</p>
+          </div>
+          <form action="/auth/signout" method="post">
+            <button
+              type="submit"
+              title="Sair"
+              className="rounded-full p-2 text-[var(--fg-muted)] transition-colors duration-150 hover:bg-[var(--muted)] hover:text-[var(--fg)]"
+            >
+              <LogOut className="h-4 w-4" />
+            </button>
+          </form>
+        </div>
       </div>
     </aside>
   );

@@ -1,19 +1,31 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Outfit, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
+/* Outfit: geométrica, próxima da Gilroy usada no site da Marmaris. */
+const outfit = Outfit({
+  variable: "--font-outfit",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
+});
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Painel da Mentoria Marmaris",
+  title: { default: "Mentoria Marmaris", template: "%s · Mentoria Marmaris" },
   description: "Gestão da Mentoria Marmaris: vender, entregar e acompanhar.",
+  icons: { icon: "/logo-marmaris.svg" },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#08080a",
+  colorScheme: "dark",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
+    <html lang="pt-BR" className="dark">
+      <body className={`${outfit.variable} ${geistMono.variable} antialiased`}>{children}</body>
     </html>
   );
 }

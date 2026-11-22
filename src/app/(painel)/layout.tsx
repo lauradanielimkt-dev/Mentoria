@@ -15,8 +15,8 @@ export default async function PainelLayout({ children }: { children: React.React
           perfil: sessao.perfil.perfil,
         }}
       />
-      <main className="flex-1 overflow-x-hidden">
-        <div className="mx-auto max-w-7xl px-6 py-8 lg:px-10">{children}</div>
+      <main className="min-w-0 flex-1">
+        <div className="mx-auto max-w-[1280px] px-6 py-9 lg:px-12">{children}</div>
       </main>
     </div>
   );
