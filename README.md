@@ -16,6 +16,7 @@ Sistema de gestão da Mentoria Marmaris: um lugar único onde o Alberto vende, e
    - `supabase/migrations/20261122000000_schema_inicial.sql` (tabelas, funções, RLS, buckets)
    - `supabase/migrations/20261122000001_grants.sql` (permissões do papel `authenticated`; sem isto o login cai em "sem acesso")
    - `supabase/migrations/20261122000002_novo_usuario_sem_acesso.sql` (usuário novo sem perfil nasce desativado)
+   - `supabase/migrations/20261122000003_grants_service_role.sql` (permissões da chave secreta)
    - `supabase/seed.sql` (listas fixas, modelos padrão, Turma 1, documentos de venda)
 3. Em **Authentication > Users**, crie o primeiro usuário (Alberto). O trigger cria o perfil como `equipe`; promova para admin no SQL Editor:
    ```sql
