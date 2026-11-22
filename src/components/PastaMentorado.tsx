@@ -2,7 +2,8 @@ import { createClient } from "@/lib/supabase/server";
 import { brl, dataCurta, dataHora, inputDate, inputDateTime, pct, ROTULOS } from "@/lib/formato";
 import type { Mentorado, Tarefa, StatusTarefa, Reuniao, Indicador, PeriodoIndicador } from "@/lib/supabase/database.types";
 import { Abas, Badge, Button, Card, Coluna, CartaoKanban, PageHeader, Progresso, Sinal, Tabela, Td, Vazio } from "@/components/ui";
-import { BotaoMini, Campo, Check, Erro, Grade, Painel } from "@/components/form";
+import { BotaoMini, Campo, Check, Erro, Grade, Ok, Painel } from "@/components/form";
+import { alternarLoginMentorado, criarLoginMentorado, redefinirSenhaMentorado } from "@/app/(painel)/mentorados/acessos-actions";
 import {
   alternarAcesso,
   atualizarMentorado,
@@ -52,6 +53,7 @@ export async function PastaMentorado({
   staff,
   admin = false,
   erro,
+  ok,
 }: {
   mentorado: Mentorado;
   aba?: string;
@@ -59,6 +61,7 @@ export async function PastaMentorado({
   staff: boolean;
   admin?: boolean;
   erro?: string;
+  ok?: string;
 }) {
   const abas = staff ? ABAS_STAFF : ABAS_MENTORADO;
   const ativa = abas.some((a) => a.id === aba) ? aba : "visao";
@@ -93,6 +96,7 @@ export async function PastaMentorado({
       />
       <Abas abas={abas} ativa={ativa} base={base} />
       <Erro mensagem={erro} />
+      <Ok mensagem={ok} />
 
       {ativa === "visao" && <AbaVisao mentorado={mentorado} ctx={ctx} />}
       {ativa === "diagnostico" && <AbaDiagnostico ctx={ctx} />}
@@ -120,10 +124,13 @@ function Ocultos({ ctx }: { ctx: Ctx }) {
 
 async function AbaVisao({ mentorado, ctx }: { mentorado: Mentorado; ctx: Ctx }) {
   const supabase = await createClient();
-  const [{ data: plano }, { data: proximas }, { data: turmas }] = await Promise.all([
+  const [{ data: plano }, { data: proximas }, { data: turmas }, { data: logins }] = await Promise.all([
     supabase.from("plano_itens").select("status").eq("mentorado_id", mentorado.id),
     supabase.from("tarefas").select("*").eq("mentorado_id", mentorado.id).neq("status", "concluida").order("prazo", { nullsFirst: false }).limit(5),
     ctx.staff ? supabase.from("turmas").select("id,nome").order("created_at") : Promise.resolve({ data: [] as { id: string; nome: string }[] }),
+    ctx.staff
+      ? supabase.from("perfis").select("id,nome,email,ativo").eq("mentorado_id", mentorado.id).order("created_at")
+      : Promise.resolve({ data: [] as { id: string; nome: string | null; email: string | null; ativo: boolean }[] }),
   ]);
   const total = plano?.length ?? 0;
   const feitos = plano?.filter((p) => p.status === "concluido").length ?? 0;
@@ -173,6 +180,60 @@ async function AbaVisao({ mentorado, ctx }: { mentorado: Mentorado; ctx: Ctx }) 
           )}
         </Card>
       </div>
+
+      {ctx.staff && (
+        <Card titulo="Acessos ao painel" acoes={<Badge tom={logins?.length ? "ok" : "alerta"}>{logins?.length ? `${logins.length} login(s)` : "Sem login"}</Badge>}>
+          {logins && logins.length > 0 && (
+            <ul className="mb-5 divide-y divide-[var(--border)] text-[13.5px]">
+              {logins.map((l) => (
+                <li key={l.id} className="flex flex-wrap items-center gap-3 py-2.5">
+                  <span className="flex items-center gap-2.5">
+                    <Sinal cor={l.ativo ? "verde" : "vermelho"} />
+                    <span className="font-medium">{l.nome ?? "—"}</span>
+                    <span className="text-[var(--fg-muted)]">{l.email}</span>
+                  </span>
+                  <span className="ml-auto flex items-center gap-2">
+                    <details className="group relative">
+                      <summary className="cursor-pointer list-none rounded-full bg-white/[0.07] px-2.5 py-1 text-[11.5px] font-medium hover:bg-white/[0.12] [&::-webkit-details-marker]:hidden">Redefinir senha</summary>
+                      <form action={redefinirSenhaMentorado} className="mt-2 flex items-center gap-1.5">
+                        <input type="hidden" name="user_id" value={l.id} />
+                        <Ocultos ctx={ctx} />
+                        <input name="senha" type="text" minLength={6} required placeholder="Nova senha" className="!w-44 !py-1 !text-xs" autoComplete="off" />
+                        <BotaoMini tom="info">Salvar</BotaoMini>
+                      </form>
+                    </details>
+                    <form action={alternarLoginMentorado}>
+                      <input type="hidden" name="user_id" value={l.id} />
+                      <input type="hidden" name="ativo" value={l.ativo ? "0" : "1"} />
+                      <Ocultos ctx={ctx} />
+                      <BotaoMini tom={l.ativo ? "erro" : "ok"}>{l.ativo ? "Desativar" : "Reativar"}</BotaoMini>
+                    </form>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+          <form action={criarLoginMentorado} className="space-y-4" autoComplete="off">
+            <Ocultos ctx={ctx} />
+            <Grade cols={3}>
+              <Campo rotulo="Nome *">
+                <input name="nome" required defaultValue={logins?.length ? "" : mentorado.dono ?? ""} placeholder="Quem vai usar o login" />
+              </Campo>
+              <Campo rotulo="E-mail *">
+                <input name="email" type="email" required placeholder="dono@agencia.com.br" autoComplete="off" />
+              </Campo>
+              <Campo rotulo="Senha inicial *" dica="Mínimo 6 caracteres. Passe ao mentorado por WhatsApp.">
+                <input name="senha" type="text" minLength={6} required autoComplete="new-password" />
+              </Campo>
+            </Grade>
+            <div className="flex items-center gap-3">
+              <p className="text-xs text-[var(--fg-muted)]">O login nasce vinculado a esta agência e já pode entrar em metodo.marmarisviagens.com.br.</p>
+              <span className="flex-1" />
+              <Button type="submit">Criar login</Button>
+            </div>
+          </form>
+        </Card>
+      )}
 
       {ctx.staff && (
         <Painel titulo="Editar ficha da agência">

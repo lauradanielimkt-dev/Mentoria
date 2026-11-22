@@ -15,6 +15,7 @@ Sistema de gestão da Mentoria Marmaris: um lugar único onde o Alberto vende, e
 2. No SQL Editor do Supabase, rode nesta ordem:
    - `supabase/migrations/20261122000000_schema_inicial.sql` (tabelas, funções, RLS, buckets)
    - `supabase/migrations/20261122000001_grants.sql` (permissões do papel `authenticated`; sem isto o login cai em "sem acesso")
+   - `supabase/migrations/20261122000002_novo_usuario_sem_acesso.sql` (usuário novo sem perfil nasce desativado)
    - `supabase/seed.sql` (listas fixas, modelos padrão, Turma 1, documentos de venda)
 3. Em **Authentication > Users**, crie o primeiro usuário (Alberto). O trigger cria o perfil como `equipe`; promova para admin no SQL Editor:
    ```sql
@@ -100,6 +101,7 @@ Endereço de produção: **https://metodo.marmarisviagens.com.br** (Railway, pro
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
    - `NEXT_PUBLIC_SITE_URL=https://metodo.marmarisviagens.com.br`
+   - `SUPABASE_SERVICE_ROLE_KEY` (chave secreta; só no servidor, usada para criar logins de mentorados)
 3. Domínio `metodo.marmarisviagens.com.br` adicionado em Settings > Networking (porta 8080). No DNS de `marmarisviagens.com.br` (registro.br) são necessários dois registros:
    - **CNAME** `metodo` → `2af82khh.up.railway.app`
    - **TXT** `_railway-verify.metodo` → `railway-verify=5b3b71871f4c862856cc628911b8bf46392a4bb3ca03df39e60c114e6718a6d5`

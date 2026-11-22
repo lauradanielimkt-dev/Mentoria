@@ -8,11 +8,11 @@ export default async function PastaPage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ aba?: string; erro?: string }>;
+  searchParams: Promise<{ aba?: string; erro?: string; ok?: string }>;
 }) {
   const sessao = await exigirPerfil("admin", "equipe");
   const { id } = await params;
-  const { aba, erro } = await searchParams;
+  const { aba, erro, ok } = await searchParams;
 
   const supabase = await createClient();
   const { data: mentorado } = await supabase.from("mentorados").select("*").eq("id", id).maybeSingle();
@@ -26,6 +26,7 @@ export default async function PastaPage({
       staff
       admin={sessao.perfil.perfil === "admin"}
       erro={erro}
+      ok={ok}
     />
   );
 }
