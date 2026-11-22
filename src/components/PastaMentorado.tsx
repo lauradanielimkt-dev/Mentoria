@@ -697,7 +697,7 @@ async function AbaIndicadores({ ctx }: { ctx: Ctx }) {
       </Tabela>
 
       {ctx.staff && (
-        <div className="grid gap-4 lg:grid-cols-2">
+        <div className="grid gap-4">
           {periodos.map((p) => {
             const i = por.get(p);
             return (
@@ -706,12 +706,12 @@ async function AbaIndicadores({ ctx }: { ctx: Ctx }) {
                   <Ocultos ctx={ctx} />
                   <input type="hidden" name="periodo" value={p} />
                   <Grade cols={4}>
-                    <Campo rotulo="Faturamento (R$)"><input name="faturamento" inputMode="decimal" defaultValue={i?.faturamento ?? ""} /></Campo>
-                    <Campo rotulo="Nº de vendas"><input name="num_vendas" type="number" defaultValue={i?.num_vendas ?? ""} /></Campo>
+                    <Campo rotulo="Faturamento"><input name="faturamento" inputMode="decimal" defaultValue={i?.faturamento ?? ""} /></Campo>
+                    <Campo rotulo="Vendas"><input name="num_vendas" type="number" defaultValue={i?.num_vendas ?? ""} /></Campo>
                     <Campo rotulo="Leads"><input name="leads" type="number" defaultValue={i?.leads ?? ""} /></Campo>
                     <Campo rotulo="Conversão (%)"><input name="conversao" inputMode="decimal" defaultValue={i?.conversao ?? ""} /></Campo>
-                    <Campo rotulo="Ticket médio (R$)"><input name="ticket_medio" inputMode="decimal" defaultValue={i?.ticket_medio ?? ""} /></Campo>
-                    <Campo rotulo="Recorrência (%)"><input name="pct_recorrencia" inputMode="decimal" defaultValue={i?.pct_recorrencia ?? ""} /></Campo>
+                    <Campo rotulo="Ticket médio"><input name="ticket_medio" inputMode="decimal" defaultValue={i?.ticket_medio ?? ""} /></Campo>
+                    <Campo rotulo="Recorrência %"><input name="pct_recorrencia" inputMode="decimal" defaultValue={i?.pct_recorrencia ?? ""} /></Campo>
                     <Campo rotulo="Seguidores"><input name="seguidores" type="number" defaultValue={i?.seguidores ?? ""} /></Campo>
                     <Campo rotulo="Observações"><input name="observacoes" defaultValue={i?.observacoes ?? ""} /></Campo>
                   </Grade>

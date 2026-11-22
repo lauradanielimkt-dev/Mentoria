@@ -38,9 +38,11 @@ export function Campo({
   className?: string;
   dica?: string;
 }) {
+  // flex-col + justify-end: os campos ficam alinhados pela base mesmo quando
+  // o rótulo quebra em duas linhas.
   return (
-    <div className={className}>
-      <label>{rotulo}</label>
+    <div className={`flex flex-col justify-end ${className}`}>
+      <label className="leading-tight">{rotulo}</label>
       {children}
       {dica && <p className="mt-1 text-xs text-[var(--fg-muted)]">{dica}</p>}
     </div>
@@ -49,7 +51,7 @@ export function Campo({
 
 export function Grade({ children, cols = 2 }: { children: ReactNode; cols?: 1 | 2 | 3 | 4 }) {
   const cls = { 1: "", 2: "sm:grid-cols-2", 3: "sm:grid-cols-3", 4: "sm:grid-cols-4" }[cols];
-  return <div className={`grid gap-4 ${cls}`}>{children}</div>;
+  return <div className={`grid items-end gap-4 ${cls}`}>{children}</div>;
 }
 
 export function Check({ nome, rotulo, marcado }: { nome: string; rotulo: string; marcado?: boolean }) {
