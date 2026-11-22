@@ -41,6 +41,24 @@ export async function criarLoginMentorado(fd: FormData) {
   if (!agencia) voltar(fd, { erro: "Agência não encontrada." });
 
   const admin = createAdminClient();
+
+  // E-mail já cadastrado? Explica onde o login está, em vez de um erro genérico.
+  const { data: existente } = await admin
+    .from("perfis")
+    .select("perfil, mentorado_id, mentorados(nome_agencia)")
+    .eq("email", email)
+    .maybeSingle();
+  if (existente) {
+    const ag = (existente.mentorados as { nome_agencia: string } | null)?.nome_agencia;
+    if (existente.perfil === "mentorado" && existente.mentorado_id === mentoradoId) {
+      voltar(fd, { erro: `Este e-mail já é um login desta agência. Use "Redefinir senha" na lista acima.` });
+    }
+    if (existente.perfil === "mentorado" && ag) {
+      voltar(fd, { erro: `Este e-mail já é o login da agência "${ag}". Gerencie senha e acesso na pasta dela, ou use outro e-mail aqui.` });
+    }
+    voltar(fd, { erro: `Este e-mail pertence a um usuário da equipe Marmaris (${existente.perfil}). Use outro e-mail para o mentorado.` });
+  }
+
   const { error } = await admin.auth.admin.createUser({
     email,
     password: senha,
@@ -49,7 +67,7 @@ export async function criarLoginMentorado(fd: FormData) {
   });
   if (error) {
     const msg = /already|registered|exists/i.test(error.message)
-      ? "Já existe um usuário com este e-mail. Use outro e-mail ou redefina a senha dele em Configurações."
+      ? "Já existe um usuário com este e-mail no sistema de login. Use outro e-mail."
       : error.message;
     voltar(fd, { erro: msg });
   }
