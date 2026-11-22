@@ -91,12 +91,28 @@ Tudo isso é garantido pelas policies em `supabase/migrations/…schema_inicial.
 - **Encerramento** → `desativar_mentorado(id)` desliga os logins da agência sem apagar histórico.
 - **Plano de 3 meses** → `gerar_plano_do_modelo(mentorado_id)` cria os itens a partir do modelo padrão.
 
+## Identidade visual
+
+Tema escuro com vidro, vermelho da marca (`--primary`), pêssego como acento (`--accent`) e fonte Outfit. Todos os tokens ficam em `src/app/globals.css`; o logo oficial está em `public/logo-marmaris.svg` e é tingido por máscara no componente `Logo`. Animações respeitam `prefers-reduced-motion`.
+
+## Edição nas telas
+
+Todas as telas têm formulários (sem JavaScript no cliente: `<details>` + Server Actions):
+
+- **Comercial**: novo interessado, editar (`/comercial/[id]`), mover de coluna, excluir
+- **Documentos de venda**: criar, editar versão/link, substituir arquivo (bucket `documentos`), excluir
+- **Financeiro**: forma, valor, parcelas (regeração das não pagas), NF, contrato, continuação, status por parcela
+- **Marketing**: criar, editar, mover de etapa, excluir
+- **Biblioteca**: criar (link ou arquivo no bucket `biblioteca`), liberar/recolher, excluir
+- **Mentorados**: cadastro manual, ficha, diagnóstico, plano (gerar do modelo + itens), reuniões, tarefas, indicadores por período, acessos, notas internas com risco, arquivos (bucket `arquivos-mentorados`), encerrar/reativar acesso
+- **Pós-mentoria**: continuação, checklist de encerramento, NPS/depoimento; relatório início × mês 3 vem dos indicadores
+- **Configurações**: nome/perfil/agência dos usuários, turmas, modelos (um item por linha), listas fixas
+
+Uploads passam por Server Actions; o limite padrão do Next é 1 MB por requisição. Para arquivos maiores, ajuste `serverActions.bodySizeLimit` em `next.config.ts`.
+
 ## Próximos passos
 
-- Formulários de criação/edição nas telas (reuniões, tarefas, plano, biblioteca, marketing, indicadores, notas)
 - Arrastar e soltar nos kanbans (Comercial, Marketing, Tarefas)
-- Upload para o Storage (documentos de venda, biblioteca, arquivos do mentorado)
 - Convite de usuários pelo painel (hoje é pelo Supabase Auth)
-- Relatório de resultados (indicadores início x fim) em Pós-mentoria
-- Aplicar a identidade visual da Marmaris nos tokens de `globals.css`
+- Versão responsiva do menu lateral para celular
 - Regenerar os tipos do banco: `npx supabase gen types typescript --project-id <id> > src/lib/supabase/database.types.ts`

@@ -1,8 +1,10 @@
+import Link from "next/link";
 import { exigirPerfil } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { brl, dataHora, ROTULOS } from "@/lib/formato";
 import type { StatusLead } from "@/lib/supabase/database.types";
 import { Abas, Badge, Button, CartaoKanban, Coluna, PageHeader, Tabela, Td, Vazio } from "@/components/ui";
+import { BotaoMini, Erro } from "@/components/form";
 import { moverLead } from "./actions";
 
 const COLUNAS: StatusLead[] = [
@@ -18,11 +20,11 @@ const COLUNAS: StatusLead[] = [
 export default async function ComercialPage({
   searchParams,
 }: {
-  searchParams: Promise<{ aba?: string }>;
+  searchParams: Promise<{ aba?: string; erro?: string }>;
 }) {
   const sessao = await exigirPerfil("admin", "equipe");
   const podeEditar = sessao.perfil.perfil === "admin";
-  const { aba = "pipeline" } = await searchParams;
+  const { aba = "pipeline", erro } = await searchParams;
   const supabase = await createClient();
 
   const [{ data: leads }, { data: origens }, { data: motivos }] = await Promise.all([
@@ -42,6 +44,7 @@ export default async function ComercialPage({
         descricao="Pipeline de interessados na mentoria. Ao fechar, o lead vira mentorado automaticamente."
         acoes={podeEditar ? <Button href="/comercial/novo">Novo interessado</Button> : undefined}
       />
+      <Erro mensagem={erro} />
 
       <Abas
         base="/comercial"
@@ -57,11 +60,13 @@ export default async function ComercialPage({
           <Tabela cabecalho={["Nome", "Agência", "Cidade", "Origem", "Faturamento", "Próximo passo"]}>
             {espera.map((l) => (
               <tr key={l.id}>
-                <Td className="font-medium">{l.nome}</Td>
+                <Td className="font-medium">
+                  {podeEditar ? <Link href={`/comercial/${l.id}`} className="hover:underline">{l.nome}</Link> : l.nome}
+                </Td>
                 <Td>{l.agencia ?? "—"}</Td>
                 <Td>{[l.cidade, l.uf].filter(Boolean).join("/") || "—"}</Td>
                 <Td>{l.origem_id ? origemNome.get(l.origem_id) : "—"}</Td>
-                <Td>{l.faturamento_aprox ? brl(l.faturamento_aprox) : "—"}</Td>
+                <Td className="tabular">{l.faturamento_aprox ? brl(l.faturamento_aprox) : "—"}</Td>
                 <Td>{l.proximo_passo ?? "—"}</Td>
               </tr>
             ))}
@@ -70,7 +75,7 @@ export default async function ComercialPage({
           <Vazio titulo="Lista de espera vazia" descricao="Interessados para a próxima turma ficam aqui." />
         )
       ) : (
-        <div className="-mx-6 overflow-x-auto px-6 pb-4 lg:-mx-10 lg:px-10">
+        <div className="-mx-6 overflow-x-auto px-6 pb-4 lg:-mx-12 lg:px-12">
           <div className="flex gap-4">
             {COLUNAS.map((status) => {
               const itens = pipeline.filter((l) => l.status === status);
@@ -78,7 +83,16 @@ export default async function ComercialPage({
                 <Coluna key={status} titulo={ROTULOS.statusLead[status]} total={itens.length}>
                   {itens.map((l) => (
                     <CartaoKanban key={l.id}>
-                      <p className="font-medium">{l.nome}</p>
+                      <div className="flex items-start justify-between gap-2">
+                        <p className="font-medium">
+                          {podeEditar ? <Link href={`/comercial/${l.id}`} className="hover:underline">{l.nome}</Link> : l.nome}
+                        </p>
+                        {l.mentorado_id && (
+                          <Link href={`/mentorados/${l.mentorado_id}`} className="text-[11px] text-[#ff8a8f] hover:underline">
+                            pasta →
+                          </Link>
+                        )}
+                      </div>
                       <p className="text-xs text-[var(--fg-muted)]">
                         {[l.agencia, [l.cidade, l.uf].filter(Boolean).join("/")].filter(Boolean).join(" · ") || "—"}
                       </p>
@@ -86,31 +100,30 @@ export default async function ComercialPage({
                         {l.origem_id && <Badge>{origemNome.get(l.origem_id)}</Badge>}
                         {l.faturamento_aprox && <Badge tom="info">{brl(l.faturamento_aprox)}</Badge>}
                       </div>
-                      {l.data_call && (
-                        <p className="mt-2 text-xs text-[var(--fg-muted)]">Call: {dataHora(l.data_call)}</p>
-                      )}
+                      {l.data_call && <p className="mt-2 text-xs text-[var(--fg-muted)]">Call: {dataHora(l.data_call)}</p>}
                       {l.proximo_passo && <p className="mt-1 text-xs">→ {l.proximo_passo}</p>}
+                      {status === "perdido" && (l.motivo_perda_texto || l.motivo_perda_id) && (
+                        <p className="mt-1 text-xs text-[var(--fg-muted)]">
+                          Motivo: {l.motivo_perda_texto ?? motivos?.find((m) => m.id === l.motivo_perda_id)?.nome}
+                        </p>
+                      )}
                       {podeEditar && status !== "fechado" && (
                         <form action={moverLead} className="mt-3 space-y-1.5">
                           <input type="hidden" name="id" value={l.id} />
-                          <select name="status" defaultValue={status} className="!py-1 text-xs">
+                          <select name="status" defaultValue={status} className="!py-1 !text-xs">
                             {COLUNAS.map((s) => (
-                              <option key={s} value={s}>
-                                {ROTULOS.statusLead[s]}
-                              </option>
+                              <option key={s} value={s}>{ROTULOS.statusLead[s]}</option>
                             ))}
                           </select>
-                          <select name="motivo_perda_id" className="!py-1 text-xs" defaultValue="">
+                          <select name="motivo_perda_id" className="!py-1 !text-xs" defaultValue={l.motivo_perda_id ?? ""}>
                             <option value="">Motivo (se perdido)</option>
                             {(motivos ?? []).map((m) => (
-                              <option key={m.id} value={m.id}>
-                                {m.nome}
-                              </option>
+                              <option key={m.id} value={m.id}>{m.nome}</option>
                             ))}
                           </select>
-                          <button type="submit" className="w-full rounded-md bg-[var(--muted)] py-1 text-xs hover:bg-[var(--border)]">
-                            Mover
-                          </button>
+                          <div className="flex justify-end">
+                            <BotaoMini>Mover</BotaoMini>
+                          </div>
                         </form>
                       )}
                     </CartaoKanban>

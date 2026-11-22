@@ -67,3 +67,19 @@ export const ROTULOS = {
     arquivo: "Arquivo",
   },
 } as const;
+
+/** Valor para <input type="datetime-local"> no fuso de São Paulo. */
+export function inputDateTime(iso: string | null | undefined): string {
+  if (!iso) return "";
+  const p = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Sao_Paulo",
+    year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: false,
+  }).formatToParts(new Date(iso));
+  const g = (t: string) => p.find((x) => x.type === t)?.value ?? "00";
+  return `${g("year")}-${g("month")}-${g("day")}T${g("hour")}:${g("minute")}`;
+}
+
+/** Valor para <input type="date"> (aceita "YYYY-MM-DD" ou ISO). */
+export function inputDate(v: string | null | undefined): string {
+  return v ? v.slice(0, 10) : "";
+}

@@ -8,15 +8,24 @@ export default async function PastaPage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ aba?: string }>;
+  searchParams: Promise<{ aba?: string; erro?: string }>;
 }) {
-  await exigirPerfil("admin", "equipe");
+  const sessao = await exigirPerfil("admin", "equipe");
   const { id } = await params;
-  const { aba } = await searchParams;
+  const { aba, erro } = await searchParams;
 
   const supabase = await createClient();
   const { data: mentorado } = await supabase.from("mentorados").select("*").eq("id", id).maybeSingle();
   if (!mentorado) notFound();
 
-  return <PastaMentorado mentorado={mentorado} aba={aba} base={`/mentorados/${id}`} staff />;
+  return (
+    <PastaMentorado
+      mentorado={mentorado}
+      aba={aba}
+      base={`/mentorados/${id}`}
+      staff
+      admin={sessao.perfil.perfil === "admin"}
+      erro={erro}
+    />
+  );
 }
