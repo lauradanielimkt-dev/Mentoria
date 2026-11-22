@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Método Marmaris · Rotina do painel e status do projeto</title>
+<style>
+  @page { size: A4; margin: 18mm 16mm 20mm 16mm; }
+  :root {
+    --red: #c4161c; --red-deep: #9b080e; --ink: #141416; --muted: #6b6b76;
+    --line: #e6e6ea; --soft: #faf7f5; --peach: #ffd3ad;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    color: var(--ink); font-size: 10.6pt; line-height: 1.5;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  h1, h2, h3 { letter-spacing: -0.01em; margin: 0; }
+  h1 { font-size: 26pt; font-weight: 700; line-height: 1.15; }
+  h2 { font-size: 15.5pt; font-weight: 700; margin: 22pt 0 8pt; padding-bottom: 5pt; border-bottom: 2px solid var(--red); break-after: avoid; }
+  h3 { font-size: 11.5pt; font-weight: 700; margin: 13pt 0 5pt; color: var(--red-deep); break-after: avoid; }
+  p { margin: 0 0 7pt; }
+  ul { margin: 0 0 8pt 0; padding-left: 16pt; }
+  li { margin: 0 0 3.5pt; }
+  li::marker { color: var(--red); }
+  .capa { height: 255mm; display: flex; flex-direction: column; justify-content: space-between; break-after: page; }
+  .capa .topo { display: flex; align-items: center; gap: 12pt; }
+  .capa .logo { width: 150pt; }
+  .capa .kicker { color: var(--red); font-weight: 700; text-transform: uppercase; letter-spacing: 0.18em; font-size: 9pt; margin-bottom: 10pt; }
+  .capa .sub { font-size: 13pt; color: var(--muted); margin-top: 10pt; max-width: 420pt; }
+  .capa .meta { border-top: 1px solid var(--line); padding-top: 12pt; color: var(--muted); font-size: 9.5pt; display: flex; gap: 28pt; }
+  .capa .meta b { color: var(--ink); display: block; font-weight: 600; }
+  .faixa { height: 6pt; background: linear-gradient(90deg, var(--red-deep), var(--red) 60%, var(--peach)); border-radius: 99pt; width: 180pt; margin-top: 18pt; }
+  .caixa { background: var(--soft); border: 1px solid var(--line); border-left: 4px solid var(--red); border-radius: 8pt; padding: 9pt 12pt; margin: 8pt 0 10pt; break-inside: avoid; }
+  .caixa p:last-child { margin-bottom: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 6pt 0 10pt; font-size: 9.8pt; break-inside: avoid; }
+  th, td { text-align: left; padding: 5.5pt 7pt; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: 8.5pt; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 700; background: var(--soft); }
+  td.ok { color: #1a7f37; font-weight: 600; }
+  td.pend { color: #9a6700; font-weight: 600; }
+  code { font-family: Consolas, "Courier New", monospace; font-size: 9.3pt; background: #f2f2f5; padding: 1pt 4pt; border-radius: 3pt; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10pt; }
+  .passo { display: flex; gap: 9pt; margin: 0 0 7pt; break-inside: avoid; }
+  .passo .n { flex: 0 0 20pt; height: 20pt; border-radius: 99pt; background: var(--red); color: #fff; font-weight: 700; font-size: 9.5pt; display: flex; align-items: center; justify-content: center; margin-top: 1pt; }
+  .rodape { color: var(--muted); font-size: 9pt; margin-top: 18pt; border-top: 1px solid var(--line); padding-top: 8pt; }
+  .pb { break-before: page; }
+</style>
+</head>
+<body>
+
+<!-- =============================================== CAPA -->
+<section class="capa">
+  <div>
+    <div class="topo">
+      <img class="logo" src="_logo-vermelho.svg" alt="Marmaris">
+    </div>
+    <div class="faixa"></div>
+    <div style="margin-top: 70pt">
+      <div class="kicker">Método Marmaris</div>
+      <h1>Painel da Mentoria<br>Rotina de uso e status do projeto</h1>
+      <p class="sub">O que já está funcionando, como usar no dia a dia e o que ainda falta. Documento para o Alberto e para a equipe da Marmaris.</p>
+    </div>
+  </div>
+  <div class="meta">
+    <div><b>Endereço do painel</b>metodo.marmarisviagens.com.br</div>
+    <div><b>Data</b>22 de novembro de 2026</div>
+    <div><b>Versão</b>1.0 · estrutura inicial completa</div>
+  </div>
+</section>
+
+<!-- =============================================== 1. VISÃO GERAL -->
+<h2>1. O que é o painel</h2>
+<p>O painel é o sistema de gestão da Mentoria Marmaris: um lugar único onde se vende, entrega e acompanha a mentoria das 5 agências. Ele segue o briefing original, com o menu em quatro blocos (Vender, Entregar, Acompanhar e Gestão) e a identidade visual da Marmaris.</p>
+
+<div class="caixa">
+  <p><b>Acesso:</b> <code>https://metodo.marmarisviagens.com.br</code> · login por e-mail e senha. Dois administradores já cadastrados: Alberto e Laura.</p>
+  <p><b>Regra central:</b> o mentorado só enxerga a própria agência. Comercial, financeiro, notas internas e as demais agências ficam bloqueados pelo banco de dados, não apenas escondidos no menu.</p>
+</div>
+
+<h3>Perfis de acesso</h3>
+<table>
+  <tr><th>Perfil</th><th>Quem</th><th>O que vê e faz</th></tr>
+  <tr><td><b>Admin</b></td><td>Alberto, Laura</td><td>Tudo, incluindo financeiro, configurações e usuários.</td></tr>
+  <tr><td><b>Equipe</b></td><td>Pessoas da Marmaris que apoiam</td><td>Marketing, onboarding, biblioteca, pasta dos mentorados e pós-mentoria. Vê o comercial sem editar; não vê financeiro nem configurações.</td></tr>
+  <tr><td><b>Mentorado</b></td><td>Dono(a) de cada agência (pode ter mais de um login por agência)</td><td>Início próprio, a pasta da própria agência, o próprio checklist de onboarding, a biblioteca liberada e a avaliação final.</td></tr>
+</table>
+
+<!-- =============================================== 2. ROTINA -->
+<h2>2. Rotina de uso (Alberto e equipe)</h2>
+
+<h3>Todo dia · 5 minutos no Início</h3>
+<ul>
+  <li><b>Cards do topo:</b> vagas preenchidas, receita recebida e a receber, tarefas atrasadas.</li>
+  <li><b>Minhas pendências:</b> tarefas atribuídas a você, por prazo. Conclua ou mova pelo kanban da agência.</li>
+  <li><b>Agenda da semana:</b> reuniões com mentorados e calls com interessados.</li>
+  <li><b>Saúde dos mentorados:</b> um sinal por agência. Verde, amarelo ou vermelho vem da última nota interna com avaliação de risco; sem nota, vem do tempo desde a última reunião realizada.</li>
+</ul>
+
+<h3>Enquanto vende (novembro e dezembro) · Comercial</h3>
+<ul>
+  <li>Cada interessado entra em <b>Novo interessado</b> com nome, agência, cidade, origem, faturamento, data da call e próximo passo.</li>
+  <li>Mova o card pelo pipeline: Novo contato → Aplicação recebida → Call agendada → Proposta enviada → Negociação → Fechado ou Perdido.</li>
+  <li><b>Perdido</b> exige um motivo (lista fixa, editável em Configurações). <b>Fechado</b> cria automaticamente a pasta da agência, o checklist de onboarding, o checklist de acessos, o registro financeiro e o registro de pós-mentoria.</li>
+  <li>Interessados para a próxima turma ficam na aba <b>Lista de espera</b>.</li>
+</ul>
+
+<h3>Logo após fechar uma venda</h3>
+<div class="passo"><div class="n">1</div><div><b>Financeiro:</b> abra a linha da agência, ajuste forma de pagamento (à vista ou até 10x), valor, primeiro vencimento e marque “Regerar parcelas”. Depois vá marcando parcela paga, nota fiscal emitida e contrato assinado.</div></div>
+<div class="passo"><div class="n">2</div><div><b>Login do mentorado:</b> crie o usuário no Supabase (Authentication → Users, com e-mail e senha) e, em Configurações → Usuários, defina o perfil Mentorado e a agência. Pode haver mais de um login por agência.</div></div>
+<div class="passo"><div class="n">3</div><div><b>Onboarding:</b> acompanhe a tabela mentorados × etapas (contrato, pagamento, boas-vindas, grupo de WhatsApp, diagnóstico, reunião, plano aprovado, acessos). O mentorado também pode marcar as etapas dele.</div></div>
+<div class="passo"><div class="n">4</div><div><b>Diagnóstico:</b> na pasta da agência, registre as respostas do formulário de dezembro (uma por linha, no formato “Pergunta: resposta”) e as notas da reunião de diagnóstico.</div></div>
+<div class="passo"><div class="n">5</div><div><b>Plano de 3 meses:</b> clique em “Gerar plano” para criar as 12 entregas do modelo padrão e ajuste por agência. O status de cada entrega alimenta o progresso que aparece no Início.</div></div>
+
+<h3>Toda semana · por mentorado (a partir de 11/01)</h3>
+<ul>
+  <li><b>Antes da reunião:</b> em Reuniões, agende a reunião de 2h. A pauta já vem preenchida com o modelo padrão.</li>
+  <li><b>Depois da reunião:</b> abra a reunião, marque como realizada e preencha ata, decisões, plano de ação e o link da gravação.</li>
+  <li><b>Tarefas:</b> crie as tarefas da semana indicando o lado responsável, Mentorado ou Marmaris, com prazo. O mentorado conclui as dele; a equipe move as da Marmaris.</li>
+  <li><b>Plano:</b> atualize o status das entregas da semana (pendente, em andamento, concluído, atrasado).</li>
+  <li><b>Biblioteca:</b> libere os materiais do pilar da semana. Um item pode ficar programado para “liberar a partir da semana X”.</li>
+  <li><b>Notas internas:</b> registre percepções sobre a agência e, quando fizer sentido, a avaliação de risco. O mentorado nunca vê essa aba.</li>
+</ul>
+
+<h3>Todo mês</h3>
+<ul>
+  <li><b>Indicadores:</b> preencha ponto de partida, mês 1, mês 2 e mês 3 (faturamento, vendas, leads, conversão, ticket médio, recorrência, seguidores). É daqui que sai o relatório de resultados.</li>
+  <li><b>Acessos:</b> marque o que já foi liberado (CRM, sistema de gestão, fornecedores, parceiros, equipe de roteiros, buscador).</li>
+  <li><b>Marketing:</b> leve os conteúdos pelo quadro (Ideia → Roteiro → Produção → Aprovação → Agendado → Publicado) e acompanhe pela visão de calendário.</li>
+</ul>
+
+<h3>No fim da mentoria · Pós-mentoria</h3>
+<ul>
+  <li>O mentorado responde a avaliação final (NPS, depoimento, autorização para usar como case).</li>
+  <li>A equipe registra o status da continuação (vai renovar, não vai, em negociação) e o checklist de encerramento: acessos revogados, grupo arquivado, pasta arquivada.</li>
+  <li>O relatório início × mês 3 aparece automaticamente a partir dos indicadores.</li>
+  <li>Na pasta da agência, “Encerrar acesso” desliga os logins sem apagar o histórico. Dá para reativar depois.</li>
+</ul>
+
+<h2>3. Rotina do mentorado</h2>
+<ul>
+  <li>Entra no mesmo endereço, com o login criado pela Marmaris.</li>
+  <li><b>Início:</b> próxima reunião, tarefas abertas e progresso do plano.</li>
+  <li><b>Minha mentoria:</b> ficha da agência, diagnóstico, plano, reuniões (pauta, ata, gravação), tarefas (conclui as do lado dele), indicadores, acessos e arquivos.</li>
+  <li><b>Onboarding:</b> marca as etapas que já cumpriu.</li>
+  <li><b>Biblioteca:</b> vê apenas o que foi liberado, no ritmo do plano.</li>
+  <li><b>Pós-mentoria:</b> formulário de avaliação final.</li>
+</ul>
+
+<!-- =============================================== 4. STATUS -->
+<h2 class="pb">4. O que está feito</h2>
+
+<h3>Infraestrutura</h3>
+<table>
+  <tr><th>Item</th><th>Situação</th><th>Detalhe</th></tr>
+  <tr><td>Código</td><td class="ok">Pronto</td><td>GitHub, repositório <code>lauradanielimkt-dev/Mentoria</code>, branch <code>feat/estrutura-inicial</code>.</td></tr>
+  <tr><td>Banco e login</td><td class="ok">Pronto</td><td>Supabase: 23 tabelas, 44 regras de acesso (RLS), 4 áreas de arquivos, listas e modelos iniciais. Login por e-mail e senha ou link mágico.</td></tr>
+  <tr><td>Hospedagem</td><td class="ok">No ar</td><td>Railway, serviço <code>Mentoria</code>. Período de teste; depois, plano Hobby (cerca de US$ 5/mês).</td></tr>
+  <tr><td>Domínio</td><td class="ok">No ar</td><td><code>metodo.marmarisviagens.com.br</code> com HTTPS. DNS configurado no registro.br (os registros do antigo <code>bloqueios</code> foram removidos).</td></tr>
+  <tr><td>Usuários</td><td class="ok">Pronto</td><td>Alberto e Laura como administradores.</td></tr>
+</table>
+
+<h3>Telas e funções</h3>
+<table>
+  <tr><th>Módulo</th><th>Situação</th><th>O que faz</th></tr>
+  <tr><td>Início</td><td class="ok">Pronto</td><td>Cards, pendências, agenda da semana e saúde dos mentorados. Versão própria para o mentorado.</td></tr>
+  <tr><td>Comercial</td><td class="ok">Pronto</td><td>Kanban de interessados, cadastro e edição, motivo de perda, lista de espera, conversão automática em mentorado.</td></tr>
+  <tr><td>Documentos de venda</td><td class="ok">Pronto</td><td>Ficha da oferta, proposta, pitch, formulário, roteiros, FAQ, contrato e termo. Versão, link ou arquivo.</td></tr>
+  <tr><td>Financeiro</td><td class="ok">Pronto</td><td>Forma, valor, parcelas, status por parcela, NF, contrato, continuação. Totais vendido, recebido e a receber.</td></tr>
+  <tr><td>Marketing</td><td class="ok">Pronto</td><td>Quadro de conteúdos e calendário por data de publicação.</td></tr>
+  <tr><td>Onboarding</td><td class="ok">Pronto</td><td>Tabela mentorados × etapas; o mentorado marca o próprio checklist.</td></tr>
+  <tr><td>Biblioteca</td><td class="ok">Pronto</td><td>Materiais por pilar, link ou arquivo, liberação imediata ou a partir de uma semana.</td></tr>
+  <tr><td>Mentorados</td><td class="ok">Pronto</td><td>Pasta por agência com 9 abas: visão geral, diagnóstico, plano, reuniões, tarefas, indicadores, acessos, notas internas e arquivos.</td></tr>
+  <tr><td>Pós-mentoria</td><td class="ok">Pronto</td><td>Avaliação final, continuação, checklist de encerramento e relatório início × mês 3.</td></tr>
+  <tr><td>Configurações</td><td class="ok">Pronto</td><td>Usuários e perfis, turmas, modelos (onboarding, plano, pauta) e listas fixas.</td></tr>
+</table>
+
+<h3>Design</h3>
+<p>Identidade da Marmaris Viagens: logo oficial, preto profundo, vermelho da marca, pêssego como acento e tipografia geométrica. Tema escuro com efeito de vidro, botões em pílula, animações curtas de entrada e transição entre páginas.</p>
+
+<h3>Automações do banco de dados</h3>
+<ul>
+  <li>Novo usuário no login → perfil criado automaticamente.</li>
+  <li>Lead em “Fechado” → pasta da agência, onboarding, acessos, financeiro e pós-mentoria criados.</li>
+  <li>Lead em “Perdido” → motivo obrigatório.</li>
+  <li>Biblioteca → o mentorado só vê itens liberados e dentro da semana da turma.</li>
+  <li>Encerrar acesso → logins desligados, histórico preservado.</li>
+</ul>
+
+<!-- =============================================== 5. PENDÊNCIAS -->
+<h2>5. O que ainda falta</h2>
+<table>
+  <tr><th>Item</th><th>Prioridade</th><th>Observação</th></tr>
+  <tr><td>Convidar mentorado pelo painel</td><td class="pend">Alta</td><td>Hoje o login é criado no Supabase e vinculado em Configurações. Um botão “Convidar” faria os dois passos e enviaria o e-mail.</td></tr>
+  <tr><td>Publicação automática</td><td class="pend">Média</td><td>Novos commits não publicam sozinhos. Para publicar: Railway → serviço Mentoria → Redeploy. Ou instalar o GitHub App do Railway em Settings → Source.</td></tr>
+  <tr><td>Versão para celular</td><td class="pend">Média</td><td>O painel funciona no desktop; o menu lateral ainda não se adapta a telas pequenas.</td></tr>
+  <tr><td>Arrastar e soltar nos kanbans</td><td class="pend">Baixa</td><td>Hoje os cards mudam de coluna por um seletor e botão “Mover”.</td></tr>
+  <tr><td>Conteúdo dos documentos de venda</td><td class="pend">Alberto</td><td>Os 8 documentos estão cadastrados sem anexo. Falta subir os arquivos ou links.</td></tr>
+  <tr><td>Materiais da biblioteca e plano</td><td class="pend">Alberto</td><td>A biblioteca está vazia e o plano padrão tem títulos genéricos por semana, para você ajustar.</td></tr>
+  <tr><td>Plano do Railway</td><td class="pend">Até 30 dias</td><td>Ao fim do período de teste, assinar o plano Hobby para o painel continuar no ar.</td></tr>
+</table>
+
+<h2>6. Endereços e acessos</h2>
+<table>
+  <tr><th>O quê</th><th>Onde</th></tr>
+  <tr><td>Painel (produção)</td><td><code>https://metodo.marmarisviagens.com.br</code></td></tr>
+  <tr><td>Endereço técnico (sem domínio)</td><td><code>mentoria-production-44189288.up.railway.app</code></td></tr>
+  <tr><td>Código</td><td><code>github.com/lauradanielimkt-dev/Mentoria</code></td></tr>
+  <tr><td>Banco e usuários</td><td>Supabase, projeto <code>rfrzkrvnnhtaafivdmup</code></td></tr>
+  <tr><td>Hospedagem</td><td>Railway, projeto <code>sincere-prosperity</code>, serviço <code>Mentoria</code></td></tr>
+  <tr><td>Domínio e DNS</td><td>registro.br, domínio <code>marmarisviagens.com.br</code></td></tr>
+</table>
+
+<p class="rodape">Método Marmaris · Painel da Mentoria · documento gerado em 22/11/2026. O passo a passo técnico completo está no README do repositório.</p>
+
+</body>
+</html>
