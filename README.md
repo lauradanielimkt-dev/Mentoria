@@ -93,15 +93,17 @@ Tudo isso é garantido pelas policies em `supabase/migrations/…schema_inicial.
 
 ## Publicação
 
-Endereço de produção: **https://metodo.marmarisviagens.com.br** (Vercel).
+Endereço de produção: **https://metodo.marmarisviagens.com.br** (Railway, projeto `sincere-prosperity`, serviço `Mentoria`). Endereço técnico: `mentoria-production-44189288.up.railway.app`.
 
-1. Na Vercel, importe o repositório `lauradanielimkt-dev/Mentoria` (branch de produção: `main`, ou a branch atual até o merge).
-2. Variáveis de ambiente do projeto na Vercel:
+1. O serviço no Railway aponta para o repositório `lauradanielimkt-dev/Mentoria`, branch `feat/estrutura-inicial`. Como o GitHub App do Railway não está instalado, o deploy automático a cada push fica desligado: para publicar uma versão nova, abra o serviço no Railway e clique em **Redeploy**, ou instale o app em Settings > Source > Configure GitHub App.
+2. Variáveis de ambiente do serviço (já configuradas):
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
    - `NEXT_PUBLIC_SITE_URL=https://metodo.marmarisviagens.com.br`
-3. Em **Settings > Domains**, adicione `metodo.marmarisviagens.com.br`. No DNS de `marmarisviagens.com.br`, crie um registro **CNAME** `metodo` apontando para `cname.vercel-dns.com`.
-4. No Supabase, em **Authentication > URL Configuration**: Site URL `https://metodo.marmarisviagens.com.br` e Redirect URLs com `https://metodo.marmarisviagens.com.br/auth/callback` e `http://localhost:3000/auth/callback`.
+3. Domínio `metodo.marmarisviagens.com.br` adicionado em Settings > Networking (porta 8080). No DNS de `marmarisviagens.com.br` (registro.br) são necessários dois registros:
+   - **CNAME** `metodo` → `2af82khh.up.railway.app`
+   - **TXT** `_railway-verify.metodo` → `railway-verify=5b3b71871f4c862856cc628911b8bf46392a4bb3ca03df39e60c114e6718a6d5`
+4. No Supabase, em **Authentication > URL Configuration** (já feito): Site URL `https://metodo.marmarisviagens.com.br` e Redirect URLs com `https://metodo.marmarisviagens.com.br/auth/callback` e `http://localhost:3000/auth/callback`.
 
 ## Identidade visual
 
