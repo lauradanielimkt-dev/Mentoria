@@ -8,7 +8,7 @@ import { calcularSaude } from "@/lib/saude";
 export default async function InicioPage() {
   const sessao = await getSessao();
   return isStaff(sessao.perfil.perfil) ? (
-    <InicioStaff admin={sessao.perfil.perfil === "admin"} userId={sessao.userId} nome={sessao.perfil.nome ?? ""} />
+    <InicioStaff admin={sessao.perfil.perfil === "admin"} userId={sessao.userId} />
   ) : (
     <InicioMentorado mentoradoId={sessao.perfil.mentorado_id!} />
   );
@@ -17,19 +17,7 @@ export default async function InicioPage() {
 /* ----------------------------------------------------------------------------
  * Versão do Alberto / equipe
  * -------------------------------------------------------------------------- */
-function saudacao(nome: string) {
-  const hora = Number(new Intl.DateTimeFormat("pt-BR", { hour: "numeric", hour12: false, timeZone: "America/Sao_Paulo" }).format(new Date()));
-  const periodo = hora < 12 ? "Bom dia" : hora < 18 ? "Boa tarde" : "Boa noite";
-  const primeiro = nome.split(/\s+/)[0];
-  return primeiro ? `${periodo}, ${primeiro}` : periodo;
-}
-
-function hojeExtenso() {
-  const s = new Intl.DateTimeFormat("pt-BR", { weekday: "long", day: "numeric", month: "long", timeZone: "America/Sao_Paulo" }).format(new Date());
-  return s.charAt(0).toUpperCase() + s.slice(1);
-}
-
-async function InicioStaff({ admin, userId, nome }: { admin: boolean; userId: string; nome: string }) {
+async function InicioStaff({ admin, userId }: { admin: boolean; userId: string }) {
   const supabase = await createClient();
   const hoje = new Date();
   const inicioSemana = new Date(hoje);
@@ -102,14 +90,7 @@ async function InicioStaff({ admin, userId, nome }: { admin: boolean; userId: st
 
   return (
     <>
-      <div className="rise mb-8 flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <p className="text-[12px] font-medium uppercase tracking-[0.2em] text-[var(--fg-muted)]">{hojeExtenso()}</p>
-          <h1 className="text-gradient mt-1.5 text-[34px] font-semibold leading-tight tracking-[-0.025em]">{saudacao(nome)}</h1>
-          <p className="mt-1.5 text-[14.5px] text-[var(--fg-muted)]">O que precisa da sua atenção hoje.</p>
-        </div>
-        {turma && <Badge tom="info">{turma.nome}</Badge>}
-      </div>
+      <PageHeader titulo="Início" descricao={turma ? turma.nome : undefined} />
 
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard rotulo="Vagas preenchidas" valor={`${vagasPreenchidas ?? 0}/${turma?.vagas ?? 5}`} tom="destaque" delay={1} />

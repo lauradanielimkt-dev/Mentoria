@@ -12,7 +12,8 @@ const outfit = Outfit({
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: { default: "Mentoria Marmaris", template: "%s · Mentoria Marmaris" },
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://metodo.marmarisviagens.com.br"),
+  title: { default: "Método Marmaris", template: "%s · Método Marmaris" },
   description: "Gestão da Mentoria Marmaris: vender, entregar e acompanhar.",
   icons: { icon: "/logo-marmaris.svg" },
 };

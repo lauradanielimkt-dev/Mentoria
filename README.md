@@ -91,6 +91,18 @@ Tudo isso é garantido pelas policies em `supabase/migrations/…schema_inicial.
 - **Encerramento** → `desativar_mentorado(id)` desliga os logins da agência sem apagar histórico.
 - **Plano de 3 meses** → `gerar_plano_do_modelo(mentorado_id)` cria os itens a partir do modelo padrão.
 
+## Publicação
+
+Endereço de produção: **https://metodo.marmarisviagens.com.br** (Vercel).
+
+1. Na Vercel, importe o repositório `lauradanielimkt-dev/Mentoria` (branch de produção: `main`, ou a branch atual até o merge).
+2. Variáveis de ambiente do projeto na Vercel:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `NEXT_PUBLIC_SITE_URL=https://metodo.marmarisviagens.com.br`
+3. Em **Settings > Domains**, adicione `metodo.marmarisviagens.com.br`. No DNS de `marmarisviagens.com.br`, crie um registro **CNAME** `metodo` apontando para `cname.vercel-dns.com`.
+4. No Supabase, em **Authentication > URL Configuration**: Site URL `https://metodo.marmarisviagens.com.br` e Redirect URLs com `https://metodo.marmarisviagens.com.br/auth/callback` e `http://localhost:3000/auth/callback`.
+
 ## Identidade visual
 
 Tema escuro com vidro, vermelho da marca (`--primary`), pêssego como acento (`--accent`) e fonte Outfit. Todos os tokens ficam em `src/app/globals.css`; o logo oficial está em `public/logo-marmaris.svg` e é tingido por máscara no componente `Logo`. Animações respeitam `prefers-reduced-motion`.
