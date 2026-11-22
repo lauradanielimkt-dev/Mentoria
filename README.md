@@ -14,6 +14,7 @@ Sistema de gestão da Mentoria Marmaris: um lugar único onde o Alberto vende, e
 1. Crie um projeto no [Supabase](https://supabase.com) e copie a URL e a anon key.
 2. No SQL Editor do Supabase, rode nesta ordem:
    - `supabase/migrations/20261122000000_schema_inicial.sql` (tabelas, funções, RLS, buckets)
+   - `supabase/migrations/20261122000001_grants.sql` (permissões do papel `authenticated`; sem isto o login cai em "sem acesso")
    - `supabase/seed.sql` (listas fixas, modelos padrão, Turma 1, documentos de venda)
 3. Em **Authentication > Users**, crie o primeiro usuário (Alberto). O trigger cria o perfil como `equipe`; promova para admin no SQL Editor:
    ```sql

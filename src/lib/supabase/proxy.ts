@@ -46,7 +46,9 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  if (user && pathname === "/login") {
+  // Logado e na tela de login: vai para o início, exceto quando o painel
+  // devolveu um erro (ex.: perfil desativado), para não entrar em loop.
+  if (user && pathname === "/login" && !request.nextUrl.searchParams.has("erro")) {
     const url = request.nextUrl.clone();
     url.pathname = "/";
     url.search = "";

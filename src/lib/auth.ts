@@ -20,13 +20,19 @@ export async function getSessao(): Promise<Sessao> {
 
   if (!user) redirect("/login");
 
-  const { data: perfil } = await supabase
+  const { data: perfil, error } = await supabase
     .from("perfis")
     .select("*")
     .eq("id", user.id)
     .maybeSingle();
 
-  if (!perfil || !perfil.ativo) redirect("/login?erro=sem_acesso");
+  if (error) console.error("[getSessao] erro ao ler perfil:", error.message, error.details);
+
+  if (!perfil || !perfil.ativo) {
+    // Encerra a sessão para não ficar preso entre /login e /
+    await supabase.auth.signOut();
+    redirect("/login?erro=sem_acesso");
+  }
 
   return { userId: user.id, email: user.email ?? null, perfil };
 }
