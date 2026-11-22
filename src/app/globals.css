@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+/*
+  Identidade visual: tokens em variáveis para alinhar com o painel atual da
+  Marmaris. Troque os valores de --primary, --sidebar etc. pelas cores da marca.
+*/
+:root {
+  --bg: #f6f7f9;
+  --fg: #111827;
+  --fg-muted: #6b7280;
+  --card: #ffffff;
+  --muted: #eef0f3;
+  --border: #e3e6eb;
+
+  --primary: #0e7490; /* azul-petróleo (placeholder da marca) */
+  --primary-fg: #ffffff;
+
+  --sidebar: #0b1f2a;
+  --sidebar-fg: #e6edf2;
+  --sidebar-hover: rgba(255, 255, 255, 0.06);
+  --sidebar-ativo: rgba(255, 255, 255, 0.12);
+  --sidebar-ativo-fg: #ffffff;
+
+  --ok: #16a34a;
+  --alerta: #f59e0b;
+  --alerta-fg: #92400e;
+  --erro: #dc2626;
+}
+
+@theme inline {
+  --color-background: var(--bg);
+  --color-foreground: var(--fg);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+input,
+select,
+textarea {
+  @apply w-full rounded-lg border border-[var(--border)] bg-[var(--card)] px-3 py-2 text-sm text-[var(--fg)] outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20;
+}
+
+label {
+  @apply mb-1 block text-xs font-medium text-[var(--fg-muted)];
+}
