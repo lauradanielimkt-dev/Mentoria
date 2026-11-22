@@ -97,7 +97,7 @@ Tudo isso é garantido pelas policies em `supabase/migrations/…schema_inicial.
 
 Endereço de produção: **https://metodo.marmarisviagens.com.br** (Railway, projeto `sincere-prosperity`, serviço `Mentoria`). Endereço técnico: `mentoria-production-44189288.up.railway.app`.
 
-1. O serviço no Railway aponta para o repositório `lauradanielimkt-dev/Mentoria`, branch `feat/estrutura-inicial`. Como o GitHub App do Railway não está instalado, o deploy automático a cada push fica desligado: para publicar uma versão nova, abra o serviço no Railway e clique em **Redeploy**, ou instale o app em Settings > Source > Configure GitHub App.
+1. O serviço no Railway aponta para o repositório `lauradanielimkt-dev/Mentoria`, branch `feat/estrutura-inicial`. Como o GitHub App do Railway não está instalado, o deploy automático a cada push fica desligado. Para publicar uma versão nova: serviço Mentoria > Settings > Source > **Check for updates** > **Update** (puxa o último commit da branch e faz o deploy). Alternativa definitiva: instalar o app em Settings > Source > Configure GitHub App.
 2. Variáveis de ambiente do serviço (já configuradas):
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
