@@ -65,7 +65,7 @@
   <div class="meta">
     <div><b>Endereço do painel</b>metodo.marmarisviagens.com.br</div>
     <div><b>Data</b>22 de novembro de 2026</div>
-    <div><b>Versão</b>1.0 · estrutura inicial completa</div>
+    <div><b>Versão</b>1.1 · login do mentorado e onboarding interno</div>
   </div>
 </section>
 
@@ -83,7 +83,7 @@
   <tr><th>Perfil</th><th>Quem</th><th>O que vê e faz</th></tr>
   <tr><td><b>Admin</b></td><td>Alberto, Laura</td><td>Tudo, incluindo financeiro, configurações e usuários.</td></tr>
   <tr><td><b>Equipe</b></td><td>Pessoas da Marmaris que apoiam</td><td>Marketing, onboarding, biblioteca, pasta dos mentorados e pós-mentoria. Vê o comercial sem editar; não vê financeiro nem configurações.</td></tr>
-  <tr><td><b>Mentorado</b></td><td>Dono(a) de cada agência (pode ter mais de um login por agência)</td><td>Início próprio, a pasta da própria agência, o próprio checklist de onboarding, a biblioteca liberada e a avaliação final.</td></tr>
+  <tr><td><b>Mentorado</b></td><td>Dono(a) de cada agência (pode ter mais de um login por agência)</td><td>Início próprio, a pasta da própria agência, a biblioteca liberada e a avaliação final.</td></tr>
 </table>
 
 <!-- =============================================== 2. ROTINA -->
@@ -107,8 +107,8 @@
 
 <h3>Logo após fechar uma venda</h3>
 <div class="passo"><div class="n">1</div><div><b>Financeiro:</b> abra a linha da agência, ajuste forma de pagamento (à vista ou até 10x), valor, primeiro vencimento e marque “Regerar parcelas”. Depois vá marcando parcela paga, nota fiscal emitida e contrato assinado.</div></div>
-<div class="passo"><div class="n">2</div><div><b>Login do mentorado:</b> crie o usuário no Supabase (Authentication → Users, com e-mail e senha) e, em Configurações → Usuários, defina o perfil Mentorado e a agência. Pode haver mais de um login por agência.</div></div>
-<div class="passo"><div class="n">3</div><div><b>Onboarding:</b> acompanhe a tabela mentorados × etapas (contrato, pagamento, boas-vindas, grupo de WhatsApp, diagnóstico, reunião, plano aprovado, acessos). O mentorado também pode marcar as etapas dele.</div></div>
+<div class="passo"><div class="n">2</div><div><b>Login do mentorado:</b> na pasta da agência, aba Visão geral, use o bloco “Acessos ao painel”: informe nome, e-mail e senha inicial e clique em “Criar login”. O acesso já nasce vinculado à agência. Pode haver mais de um login por agência, e ali mesmo dá para redefinir a senha ou desativar.</div></div>
+<div class="passo"><div class="n">3</div><div><b>Onboarding:</b> acompanhe a tabela mentorados × etapas (contrato, pagamento, boas-vindas, grupo de WhatsApp, diagnóstico, reunião, plano aprovado, acessos). É um controle interno: o mentorado não vê essa tela.</div></div>
 <div class="passo"><div class="n">4</div><div><b>Diagnóstico:</b> na pasta da agência, registre as respostas do formulário de dezembro (uma por linha, no formato “Pergunta: resposta”) e as notas da reunião de diagnóstico.</div></div>
 <div class="passo"><div class="n">5</div><div><b>Plano de 3 meses:</b> clique em “Gerar plano” para criar as 12 entregas do modelo padrão e ajuste por agência. O status de cada entrega alimenta o progresso que aparece no Início.</div></div>
 
@@ -142,7 +142,6 @@
   <li>Entra no mesmo endereço, com o login criado pela Marmaris.</li>
   <li><b>Início:</b> próxima reunião, tarefas abertas e progresso do plano.</li>
   <li><b>Minha mentoria:</b> ficha da agência, diagnóstico, plano, reuniões (pauta, ata, gravação), tarefas (conclui as do lado dele), indicadores, acessos e arquivos.</li>
-  <li><b>Onboarding:</b> marca as etapas que já cumpriu.</li>
   <li><b>Biblioteca:</b> vê apenas o que foi liberado, no ritmo do plano.</li>
   <li><b>Pós-mentoria:</b> formulário de avaliação final.</li>
 </ul>
@@ -154,10 +153,10 @@
 <table>
   <tr><th>Item</th><th>Situação</th><th>Detalhe</th></tr>
   <tr><td>Código</td><td class="ok">Pronto</td><td>GitHub, repositório <code>lauradanielimkt-dev/Mentoria</code>, branch <code>feat/estrutura-inicial</code>.</td></tr>
-  <tr><td>Banco e login</td><td class="ok">Pronto</td><td>Supabase: 23 tabelas, 44 regras de acesso (RLS), 4 áreas de arquivos, listas e modelos iniciais. Login por e-mail e senha ou link mágico.</td></tr>
+  <tr><td>Banco e login</td><td class="ok">Pronto</td><td>Supabase: 23 tabelas, 44 regras de acesso (RLS), 4 áreas de arquivos, listas e modelos iniciais. Login por e-mail e senha.</td></tr>
   <tr><td>Hospedagem</td><td class="ok">No ar</td><td>Railway, serviço <code>Mentoria</code>. Período de teste; depois, plano Hobby (cerca de US$ 5/mês).</td></tr>
   <tr><td>Domínio</td><td class="ok">No ar</td><td><code>metodo.marmarisviagens.com.br</code> com HTTPS. DNS configurado no registro.br (os registros do antigo <code>bloqueios</code> foram removidos).</td></tr>
-  <tr><td>Usuários</td><td class="ok">Pronto</td><td>Alberto e Laura como administradores.</td></tr>
+  <tr><td>Usuários</td><td class="ok">Pronto</td><td>Alberto e Laura como administradores. Logins de mentorados criados pela pasta da agência.</td></tr>
 </table>
 
 <h3>Telas e funções</h3>
@@ -168,7 +167,7 @@
   <tr><td>Documentos de venda</td><td class="ok">Pronto</td><td>Ficha da oferta, proposta, pitch, formulário, roteiros, FAQ, contrato e termo. Versão, link ou arquivo.</td></tr>
   <tr><td>Financeiro</td><td class="ok">Pronto</td><td>Forma, valor, parcelas, status por parcela, NF, contrato, continuação. Totais vendido, recebido e a receber.</td></tr>
   <tr><td>Marketing</td><td class="ok">Pronto</td><td>Quadro de conteúdos e calendário por data de publicação.</td></tr>
-  <tr><td>Onboarding</td><td class="ok">Pronto</td><td>Tabela mentorados × etapas; o mentorado marca o próprio checklist.</td></tr>
+  <tr><td>Onboarding</td><td class="ok">Pronto</td><td>Tabela mentorados × etapas, controle interno da equipe.</td></tr>
   <tr><td>Biblioteca</td><td class="ok">Pronto</td><td>Materiais por pilar, link ou arquivo, liberação imediata ou a partir de uma semana.</td></tr>
   <tr><td>Mentorados</td><td class="ok">Pronto</td><td>Pasta por agência com 9 abas: visão geral, diagnóstico, plano, reuniões, tarefas, indicadores, acessos, notas internas e arquivos.</td></tr>
   <tr><td>Pós-mentoria</td><td class="ok">Pronto</td><td>Avaliação final, continuação, checklist de encerramento e relatório início × mês 3.</td></tr>
@@ -191,8 +190,7 @@
 <h2>5. O que ainda falta</h2>
 <table>
   <tr><th>Item</th><th>Prioridade</th><th>Observação</th></tr>
-  <tr><td>Convidar mentorado pelo painel</td><td class="pend">Alta</td><td>Hoje o login é criado no Supabase e vinculado em Configurações. Um botão “Convidar” faria os dois passos e enviaria o e-mail.</td></tr>
-  <tr><td>Publicação automática</td><td class="pend">Média</td><td>Novos commits não publicam sozinhos. Para publicar: Railway → serviço Mentoria → Redeploy. Ou instalar o GitHub App do Railway em Settings → Source.</td></tr>
+  <tr><td>Publicação automática</td><td class="pend">Média</td><td>Novos commits não publicam sozinhos. Para publicar: Railway → serviço Mentoria → Settings → Source → “Check for updates” → “Update”. Ou instalar o GitHub App do Railway em Settings → Source.</td></tr>
   <tr><td>Versão para celular</td><td class="pend">Média</td><td>O painel funciona no desktop; o menu lateral ainda não se adapta a telas pequenas.</td></tr>
   <tr><td>Arrastar e soltar nos kanbans</td><td class="pend">Baixa</td><td>Hoje os cards mudam de coluna por um seletor e botão “Mover”.</td></tr>
   <tr><td>Conteúdo dos documentos de venda</td><td class="pend">Alberto</td><td>Os 8 documentos estão cadastrados sem anexo. Falta subir os arquivos ou links.</td></tr>

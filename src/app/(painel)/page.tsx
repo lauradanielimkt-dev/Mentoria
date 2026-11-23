@@ -233,7 +233,6 @@ async function InicioMentorado({ mentoradoId }: { mentoradoId: string }) {
             <li><Link className="hover:underline" href="/minha-mentoria?aba=plano">Ver o plano de 3 meses</Link></li>
             <li><Link className="hover:underline" href="/minha-mentoria?aba=reunioes">Reuniões e gravações</Link></li>
             <li><Link className="hover:underline" href="/biblioteca">Biblioteca de materiais</Link></li>
-            <li><Link className="hover:underline" href="/onboarding">Checklist de onboarding</Link></li>
           </ul>
         </Card>
       </div>

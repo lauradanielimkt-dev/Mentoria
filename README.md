@@ -17,6 +17,7 @@ Sistema de gestão da Mentoria Marmaris: um lugar único onde o Alberto vende, e
    - `supabase/migrations/20261122000001_grants.sql` (permissões do papel `authenticated`; sem isto o login cai em "sem acesso")
    - `supabase/migrations/20261122000002_novo_usuario_sem_acesso.sql` (usuário novo sem perfil nasce desativado)
    - `supabase/migrations/20261122000003_grants_service_role.sql` (permissões da chave secreta)
+   - `supabase/migrations/20261122000004_onboarding_so_equipe.sql` (onboarding deixa de ser visível ao mentorado)
    - `supabase/seed.sql` (listas fixas, modelos padrão, Turma 1, documentos de venda)
 3. Em **Authentication > Users**, crie o primeiro usuário (Alberto). O trigger cria o perfil como `equipe`; promova para admin no SQL Editor:
    ```sql
@@ -42,14 +43,14 @@ src/
       documentos-venda/
       financeiro/        # só admin
       marketing/         # quadro + calendário
-      onboarding/        # tabela mentorados x etapas; mentorado marca o próprio
+      onboarding/        # tabela mentorados x etapas (só admin e equipe)
       biblioteca/        # por pilar; mentorado só vê o liberado
       mentorados/        # cards + pasta por agência ([id], com abas)
       minha-mentoria/    # a pasta do próprio mentorado
       pos-mentoria/      # tabela staff; formulário de avaliação p/ mentorado
       configuracoes/     # usuários, turmas, modelos, listas fixas
-    login/               # e-mail+senha ou link mágico
-    auth/                # callback do link mágico e signout
+    login/               # e-mail e senha (globo 3D de fundo)
+    auth/                # signout e callback de links do Supabase
   components/
     Sidebar.tsx          # menu em 4 blocos: Vender, Entregar, Acompanhar, Gestão
     PastaMentorado.tsx   # abas da pasta do mentorado (reusado por staff e mentorado)
@@ -74,7 +75,7 @@ supabase/
 | Documentos de venda | editar | editar        | sem acesso                         |
 | Financeiro          | editar | sem acesso    | sem acesso                         |
 | Marketing           | editar | editar        | sem acesso                         |
-| Onboarding          | editar | editar        | só o próprio checklist (marca)     |
+| Onboarding          | editar | editar        | sem acesso                         |
 | Biblioteca          | editar | editar        | só itens liberados                 |
 | Pasta do mentorado  | tudo   | tudo          | só a própria, sem notas internas   |
 | Pós-mentoria        | editar | editar        | só o formulário de avaliação dele  |

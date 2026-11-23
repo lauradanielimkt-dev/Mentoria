@@ -1,12 +1,12 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { getSessao } from "@/lib/auth";
+import { exigirPerfil } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 
-/** Marca/desmarca uma etapa. A RLS garante que o mentorado só altera o próprio checklist. */
+/** Marca/desmarca uma etapa do onboarding. Só admin e equipe. */
 export async function alternarItemOnboarding(formData: FormData) {
-  const sessao = await getSessao();
+  const sessao = await exigirPerfil("admin", "equipe");
   const id = String(formData.get("id"));
   const concluido = formData.get("concluido") === "1";
 

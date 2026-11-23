@@ -1,54 +1,14 @@
-import { getSessao, isStaff } from "@/lib/auth";
+import { exigirPerfil } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { Card, PageHeader, Vazio } from "@/components/ui";
+import { PageHeader, Vazio } from "@/components/ui";
 import { alternarItemOnboarding } from "./actions";
 
+/** Onboarding é interno da Marmaris: só admin e equipe. Mentorado é redirecionado ao Início. */
 export default async function OnboardingPage() {
-  const sessao = await getSessao();
+  await exigirPerfil("admin", "equipe");
   const supabase = await createClient();
 
-  if (!isStaff(sessao.perfil.perfil)) {
-    const { data: itens } = await supabase
-      .from("onboarding_itens")
-      .select("*")
-      .eq("mentorado_id", sessao.perfil.mentorado_id!)
-      .order("ordem");
-    const feitos = itens?.filter((i) => i.concluido).length ?? 0;
-
-    return (
-      <>
-        <PageHeader titulo="Onboarding" descricao={`${feitos} de ${itens?.length ?? 0} etapas concluídas`} />
-        <Card className="max-w-xl">
-          {itens && itens.length ? (
-            <ul className="divide-y divide-[var(--border)]">
-              {itens.map((i) => (
-                <li key={i.id} className="py-2.5">
-                  <form action={alternarItemOnboarding} className="flex items-center gap-3 text-sm">
-                    <input type="hidden" name="id" value={i.id} />
-                    <input type="hidden" name="concluido" value={i.concluido ? "0" : "1"} />
-                    <button
-                      type="submit"
-                      aria-label={i.concluido ? "Desmarcar" : "Marcar como feito"}
-                      className={`flex h-5 w-5 items-center justify-center rounded border ${
-                        i.concluido ? "border-[var(--ok)] bg-[var(--ok)] text-white" : "border-[var(--border)]"
-                      }`}
-                    >
-                      {i.concluido && "✓"}
-                    </button>
-                    <span className={i.concluido ? "text-[var(--fg-muted)] line-through" : ""}>{i.titulo}</span>
-                  </form>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <Vazio titulo="Checklist ainda não criado" descricao="A equipe da Marmaris vai liberar seu checklist em breve." />
-          )}
-        </Card>
-      </>
-    );
-  }
-
-  // Staff: tabela mentorados x etapas
+  // Tabela mentorados x etapas
   const [{ data: mentorados }, { data: itens }] = await Promise.all([
     supabase.from("mentorados").select("id,nome_agencia").eq("ativo", true).order("nome_agencia"),
     supabase.from("onboarding_itens").select("*").order("ordem"),

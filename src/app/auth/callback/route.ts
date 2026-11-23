@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { origemPublica } from "@/lib/http";
 
-/** Troca o código do link mágico por uma sessão. */
+/** Troca o código de um link enviado pelo Supabase (ex.: redefinição de senha) por uma sessão. */
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const origin = origemPublica(request);

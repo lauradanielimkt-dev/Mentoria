@@ -1,4 +1,4 @@
-import { entrarComSenha, enviarLinkMagico } from "./actions";
+import { entrarComSenha } from "./actions";
 import { Button } from "@/components/ui";
 import { Logo } from "@/components/Logo";
 import { GloboLogin } from "@/components/GloboLogin";
@@ -7,7 +7,6 @@ import { DESTINOS } from "@/lib/destinos";
 const MENSAGENS: Record<string, string> = {
   credenciais: "E-mail ou senha incorretos.",
   sem_acesso: "Este acesso está desativado. Fale com a equipe da Marmaris.",
-  link_enviado: "Enviamos um link de acesso para o seu e-mail.",
   erro: "Não foi possível entrar. Tente de novo.",
 };
 
@@ -62,7 +61,7 @@ export default async function LoginPage({
               </p>
             )}
 
-            <form className="mt-8 space-y-4">
+            <form action={entrarComSenha} className="mt-8 space-y-4">
               <input type="hidden" name="next" value={next ?? "/"} />
               <div className="rise rise-3">
                 <label htmlFor="email">E-mail</label>
@@ -70,14 +69,11 @@ export default async function LoginPage({
               </div>
               <div className="rise rise-4">
                 <label htmlFor="senha">Senha</label>
-                <input id="senha" name="senha" type="password" autoComplete="current-password" placeholder="••••••••" className="!rounded-[14px] !bg-white/[0.04] !py-3 backdrop-blur-md" />
+                <input id="senha" name="senha" type="password" required autoComplete="current-password" placeholder="••••••••" className="!rounded-[14px] !bg-white/[0.04] !py-3 backdrop-blur-md" />
               </div>
-              <div className="rise rise-5 flex flex-col gap-3 pt-2 sm:flex-row sm:items-center">
-                <Button type="submit" formAction={entrarComSenha} className="!px-7 !py-3 sm:min-w-[150px]">
+              <div className="rise rise-5 pt-2">
+                <Button type="submit" className="w-full !py-3 sm:w-auto sm:!px-10">
                   Entrar
-                </Button>
-                <Button type="submit" formAction={enviarLinkMagico} variante="fantasma" className="!py-3">
-                  Receber link por e-mail
                 </Button>
               </div>
             </form>

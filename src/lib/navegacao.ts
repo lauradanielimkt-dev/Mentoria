@@ -34,7 +34,7 @@ export const MENU: BlocoMenu[] = [
     titulo: "Entregar",
     itens: [
       { href: "/marketing", label: "Marketing", icone: "Megaphone", perfis: STAFF },
-      { href: "/onboarding", label: "Onboarding", icone: "ClipboardCheck", perfis: TODOS },
+      { href: "/onboarding", label: "Onboarding", icone: "ClipboardCheck", perfis: STAFF },
       { href: "/biblioteca", label: "Biblioteca", icone: "Library", perfis: TODOS },
     ],
   },
